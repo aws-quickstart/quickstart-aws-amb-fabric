@@ -1,0 +1,301 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: This template creates Control Center Instance
+Parameters:
+  PublicSubnet1ID:
+    Description: Public Subnet Id 1
+    Type: 'AWS::EC2::Subnet::Id'
+  KeyPairName:
+    Type: 'AWS::EC2::KeyPair::KeyName'
+    ConstraintDescription: Name of an existing EC2 KeyPair.
+  RemoteAccessCIDR:
+    AllowedPattern: >-
+      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/x
+    Description: Allowed CIDR block for external SSH access
+    Type: String
+  VPCID:
+    Description: VPC ID
+    Type: 'AWS::EC2::VPC::Id'
+  VPCCIDR:
+    AllowedPattern: >-
+      ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
+    Description: CIDR Block for the VPC
+    Type: String
+  QSS3BucketName:
+    AllowedPattern: '^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$'
+    ConstraintDescription: >-
+      Quick Start bucket name can include numbers, lowercase letters, uppercase
+      letters, and hyphens (-). It cannot start or end with a hyphen (-).
+    Default: aws-quickstart
+    Type: String
+  QSS3KeyPrefix:
+    AllowedPattern: '^[0-9a-zA-Z-/]*$'
+    ConstraintDescription: >-
+      Quick Start key prefix can include numbers, lowercase letters, uppercase
+      letters, hyphens (-), and forward slash (/).
+    Default: quickstart-aws-amb-fabric/
+    Description: >-
+      S3 key prefix for the Quick Start assets. Quick Start key prefix can
+      include numbers, lowercase letters, uppercase letters, hyphens (-), and
+      forward slash (/).
+    Type: String
+  InstanceType:
+    AllowedValues:
+      - t2.micro
+      - t2.small
+      - t2.medium
+      - t2.large
+      - m4.large
+      - m4.xlarge
+      - m4.2xlarge
+      - m4.4xlarge
+      - m4.10xlarge
+      - c4.large
+      - c4.xlarge
+      - c4.2xlarge
+      - c4.4xlarge
+      - c4.8xlarge
+      - r4.large
+      - r4.xlarge
+      - r4.2xlarge
+      - r4.4xlarge
+      - r4.8xlarge
+    ConstraintDescription: "must be a valid EC2 instance type."
+    Default: t2.medium
+    Description: "EC2 instance type"
+    Type: String
+Conditions:
+  GovCloudCondition: !Equals
+    - !Ref AWS::Region
+    - us-gov-west-1
+Mappings:
+  AWSAMIRegionMap:
+    AMI:
+      US1604HVM: ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-20180405
+    ap-northeast-1:
+      US1604HVM: ami-60a4b21c
+    ap-northeast-2:
+      US1604HVM: ami-633d920d
+    ap-south-1:
+      US1604HVM: ami-dba580b4
+    ap-southeast-1:
+      US1604HVM: ami-82c9ecfe
+    ap-southeast-2:
+      US1604HVM: ami-2b12dc49
+    ca-central-1:
+      US1604HVM: ami-9d7afcf9
+    eu-central-1:
+      US1604HVM: ami-cd491726
+    eu-west-1:
+      US1604HVM: ami-74e6b80d
+    eu-west-2:
+      US1604HVM: ami-506e8f37
+    sa-east-1:
+      US1604HVM: ami-5782d43b
+    us-east-1:
+      US1604HVM: ami-6dfe5010
+    us-east-2:
+      US1604HVM: ami-e82a1a8d
+    us-west-1:
+      US1604HVM: ami-493f2f29
+    us-west-2:
+      US1604HVM: ami-ca89eeb2
+Resources:
+  InstanceRole: 
+    Type: 'AWS::IAM::Role'
+    Properties: 
+      AssumeRolePolicyDocument: 
+        Statement: 
+          - 
+            Effect: 'Allow'
+            Principal: 
+              Service: 
+                - 'ec2.amazonaws.com'
+            Action: 
+              - 'sts:AssumeRole'
+      Path: '/'
+  InstanceProfile: 
+    Type: 'AWS::IAM::InstanceProfile'
+    Properties: 
+      Path: '/'
+      Roles: 
+        - Ref: 'InstanceRole'
+  AuthenticatedS3Policy:
+    Type: AWS::IAM::Policy
+    Properties:
+        PolicyName: AuthenticatedS3GetObjects
+        Roles: 
+        - !Ref InstanceRole
+        PolicyDocument:
+           Statement:
+             - Sid: BucketAccess
+               Effect: Allow
+               Action:
+                 - 's3:GetObject'
+               Resource: !Sub arn:aws:s3:::${QSS3BucketName}/*
+  ContolCenterSecGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Enables SSH access to the DDAC Seed.
+      VpcId: !Ref VPCID
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !Ref RemoteAccessCIDR
+        - IpProtocol: tcp
+          FromPort: 0
+          ToPort: 65535
+          CidrIp: !Ref VPCCIDR
+  ControlCenter:
+    Type: 'AWS::EC2::Instance'
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT15M
+    Metadata:
+      'AWS::CloudFormation::Authentication':
+       S3AccessCreds:
+         type: S3
+         roleName: !Ref InstanceRole
+         buckets: !Ref QSS3BucketName
+      'AWS::CloudFormation::Init':
+        configSets:
+          cc_install:
+            - install_and_enable_cfn_hup
+            - run_cc_configuration
+            - post_install
+        install_and_enable_cfn_hup:
+          files:
+            /etc/cfn/cfn-hup.conf:
+              content: !Join 
+                - ''
+                - - |
+                    [main]
+                  - stack=
+                  - !Ref 'AWS::StackId'
+                  - |+
+
+                  - region=
+                  - !Ref 'AWS::Region'
+                  - |+
+
+              mode: '000400'
+              owner: root
+              group: root
+            /etc/cfn/hooks.d/cfn-auto-reloader.conf:
+              content: !Join 
+                - ''
+                - - |
+                    [cfn-auto-reloader-hook]
+                  - |
+                    triggers=post.update
+                  - >
+                    path=Resources.ControlCenter.Metadata.AWS::CloudFormation::Init
+                  - 'action=/usr/local/bin/cfn-init -v '
+                  - '         --stack '
+                  - !Ref 'AWS::StackName'
+                  - '         --resource ControlCenter '
+                  - '         --configsets cc_install '
+                  - '         --region '
+                  - !Ref 'AWS::Region'
+                  - |+
+
+                  - |
+                    runas=root
+            /lib/systemd/system/cfn-hup.service:
+              content: !Join 
+                - ''
+                - - |
+                    [Unit]
+                  - |+
+                    Description=cfn-hup daemon
+
+                  - |
+                    [Service]
+                  - |
+                    Type=simple
+                  - |
+                    ExecStart=/usr/local/bin/cfn-hup
+                  - |+
+                    Restart=always
+                  - |
+                    [Install]
+                  - WantedBy=multi-user.target
+          commands:
+            01enable_cfn_hup:
+              command: systemctl enable cfn-hup.service
+            02start_cfn_hup:
+              command: systemctl start cfn-hup.service
+        run_cc_configuration:
+          sources:
+            /home/ubuntu: !Sub
+                - >-
+                  https://${QSS3BucketName}.${S3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/foo.py
+                - QSS3BucketName: !Ref QSS3BucketName
+                  S3Region: !If [ GovCloudCondition, s3-us-gov-west-1, s3 ]
+                  QSS3KeyPrefix: !Ref QSS3KeyPrefix
+          commands:
+            01_set_permissions:
+                command:  chmod 755 /home/ubuntu/foo.py
+            02_run_deployment_scripts:
+                cwd: /home/ubuntu/
+                command: python foo.py
+        post_install:
+          commands:
+            01_post_run_cc_configuration:
+              command: touch /tmp/01_post_run_cc_configuration
+    Properties:
+      InstanceType: !Ref InstanceType
+      IamInstanceProfile: !Ref InstanceProfile
+      NetworkInterfaces:
+        - DeleteOnTermination: true
+          DeviceIndex: '0'
+          SubnetId: !Ref PublicSubnet1ID
+          GroupSet:
+            - !Ref ContolCenterSecGroup
+      KeyName: !Ref KeyPairName
+      ImageId: !FindInMap 
+        - AWSAMIRegionMap
+        - !Ref 'AWS::Region'
+        - US1604HVM
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 20
+            VolumeType: gp2
+      Tags:
+          - Key: Name
+            Value: seednode1
+      UserData:
+        Fn::Base64: !Sub
+        - |
+          #!/bin/bash -xe
+          #CFN Signaling fuctions (begin)
+          function cfn_fail
+          {
+            cfn-signal -e 1 --stack ${AWS::StackName} --region ${AWS::Region} --resource ControlCenter
+            exit 1
+          }
+          function cfn_success
+          {
+            cfn-signal -e 0 --stack ${AWS::StackName} --region ${AWS::Region} --resource ControlCenter
+            exit 0
+          }
+          #Load Linux utils
+          until git clone https://github.com/aws-quickstart/quickstart-linux-utilities.git ; do echo "Retrying"; done
+          cd /quickstart-linux-utilities && source quickstart-cfn-tools.source
+          # Constants
+          S3URI=https://${QSS3BucketName}.${S3Region}.amazonaws.com/${QSS3KeyPrefix}
+          # Prep operating systems
+          qs_update-os || qs_err
+          qs_bootstrap_pip || qs_err
+          qs_aws-cfn-bootstrap || qs_err
+          # Install pip requirements
+          #pip3 install requirements 
+          #Run cfn-init configsets
+          cfn-init -v --stack ${AWS::StackName} --resource ControlCenter --configsets cc_install --region ${AWS::Region} || qs_err
+          # Signal cfn-init (final check)
+          [ $(qs_status) == 0 ] && cfn_success || cfn_fail
+
+        - S3Region: !If [ GovCloudCondition, s3-us-gov-west-1, s3 ]
+
