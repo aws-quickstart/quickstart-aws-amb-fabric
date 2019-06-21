@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, os, subprocess, ast, argparse, random, time
+import subprocess, ast, argparse, random, time
 
 parser = argparse.ArgumentParser(description='Set up Amazon Managed Blockchain')
 parser.add_argument('--name', default='ACME')
