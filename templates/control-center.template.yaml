@@ -230,16 +230,16 @@ Resources:
           sources:
             /home/ubuntu: !Sub
                 - >-
-                  https://${QSS3BucketName}.${S3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/foo.py
+                  https://${QSS3BucketName}.${S3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/create-network-and-peers.py
                 - QSS3BucketName: !Ref QSS3BucketName
                   S3Region: !If [ GovCloudCondition, s3-us-gov-west-1, s3 ]
                   QSS3KeyPrefix: !Ref QSS3KeyPrefix
           commands:
             01_set_permissions:
-                command:  chmod 755 /home/ubuntu/foo.py
+                command:  chmod 755 /home/ubuntu/create-network-and-peers.py
             02_run_deployment_scripts:
                 cwd: /home/ubuntu/
-                command: python foo.py
+                command: python create-network-and-peers.py
         post_install:
           commands:
             01_post_run_cc_configuration:
