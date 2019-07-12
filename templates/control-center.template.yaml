@@ -239,7 +239,7 @@ Resources:
                 command:  chmod 755 /home/ubuntu/create-network-and-peers.py
             02_run_deployment_scripts:
                 cwd: /home/ubuntu/
-                command: python create-network-and-peers.py
+                command: python3 create-network-and-peers.py
         post_install:
           commands:
             01_post_run_cc_configuration:
