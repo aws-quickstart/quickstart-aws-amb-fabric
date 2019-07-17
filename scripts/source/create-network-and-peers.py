@@ -59,13 +59,13 @@ def username_arg(value):
 
 def threshold_percentage_arg(value):
     if value < 1 or value > 100:
-        raise argparse.ArgumentTypeError('threshold must be an integer between 1 and 100')
+        raise argparse.ArgumentTypeError('threshold percentage must be an integer between 1 and 100')
     return value
 
 
 def proposal_duration_arg(value):
     if value < 1 or value > 168:
-        raise argparse.ArgumentTypeError('threshold must be an integer between 1 and 168')
+        raise argparse.ArgumentTypeError('proposal duration must be an integer between 1 and 168')
     return value
 
 
