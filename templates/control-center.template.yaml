@@ -155,7 +155,7 @@ Resources:
     Type: 'AWS::EC2::Instance'
     CreationPolicy:
       ResourceSignal:
-        Timeout: PT15M
+        Timeout: PT30M
     Metadata:
       'AWS::CloudFormation::Authentication':
        S3AccessCreds:
