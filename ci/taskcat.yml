@@ -21,4 +21,4 @@ tests:
     parameter_input: amb-master.json
     template_file: amb-master.template.yaml
     regions:
-    - us-east-1
+      - us-east-1

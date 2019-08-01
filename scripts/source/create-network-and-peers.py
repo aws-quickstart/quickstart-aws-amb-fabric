@@ -1,6 +1,23 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 
 import subprocess, ast, argparse, random, time, re
+
+
+def process_command_result(result):
+    output = result.stdout.strip()
+    print("Output was:\n{}".format(output))
+    obj = {}
+    try:
+        obj = ast.literal_eval(output)
+    except SyntaxError:
+        error = result.stderr.strip()
+        pattern = re.compile('Instance type ([a-z0-9.]+) isn\'t supported in availability zone ([a-z0-9-]+)')
+        if pattern.match(error):
+            raise ValueError("Unavailable instance type")
+        else:
+            print("Error executing command: {}".format(result.stderr))
+            exit(1)
+    return obj
 
 
 def password_arg(value):
@@ -30,7 +47,7 @@ def framework_arg(value):
 
 
 def name_arg(value):
-    pattern = re.compile('^[A-Za-z0-9]+$')
+    pattern = re.compile('^[0-9a-zA-Z-/]+$')
     if not pattern.match(value):
         raise argparse.ArgumentTypeError('name can only contain alphanumeric characters')
     return value
@@ -58,12 +75,14 @@ def username_arg(value):
 
 
 def threshold_percentage_arg(value):
+    value = int(value)
     if value < 1 or value > 100:
         raise argparse.ArgumentTypeError('threshold percentage must be an integer between 1 and 100')
     return value
 
 
 def proposal_duration_arg(value):
+    value = int(value)
     if value < 1 or value > 168:
         raise argparse.ArgumentTypeError('proposal duration must be an integer between 1 and 168')
     return value
@@ -76,7 +95,8 @@ def threshold_comparator_arg(value):
 
 
 parser = argparse.ArgumentParser(description='Set up Amazon Managed Blockchain')
-parser.add_argument('--name', default='ACME', required=True, type=name_arg)
+parser.add_argument('--network-name', default='acme-network', required=True, type=name_arg)
+parser.add_argument('--first-member-name', default='first-member', required=True, type=name_arg)
 parser.add_argument('--framework', default='HYPERLEDGER_FABRIC', type=framework_arg)
 parser.add_argument('--framework-version', default='1.2', type=framework_version_arg)
 parser.add_argument('--framework-configuration', default='STANDARD', type=framework_configuration_arg)
@@ -118,7 +138,7 @@ if not pattern.match(args.node_type):
 
 
 member_options = {
-    'name': args.name,
+    'name': args.first_member_name,
     'admin-username': args.admin_username,
     'admin-password': args.admin_password
 }
@@ -130,7 +150,7 @@ voting_policy = {
 }
 
 chain_options = {
-    'name': args.name,
+    'name': args.network_name,
     'framework': args.framework,
     'framework-version': args.framework_version,
     'framework-configuration': 'Fabric={{Edition={0}}}'.format(args.framework_configuration),
@@ -141,10 +161,11 @@ chain_options = {
     'voting-policy': "ApprovalThresholdPolicy={{"
                      "ThresholdPercentage={threshold-percentage},"
                      "ProposalDurationInHours={proposal-duration},"
-                     "ThresholdComparator={threshold-comparator}}}".format(**voting_policy)
+                     "ThresholdComparator={threshold-comparator}}}".format(**voting_policy),
+    'region': 'us-east-1'
 }
 
-cmd = 'aws managedblockchain create-network'
+cmd = '/usr/local/bin/aws managedblockchain create-network'
 for k, v in chain_options.items():
     cmd += ' --{0} "{1}"'.format(k, v)
 
@@ -152,17 +173,14 @@ print(cmd)
 
 # create network
 result = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-output = result.stdout
-print(output)
-results = ast.literal_eval(output)
+results = process_command_result(result)
 
 # wait for network to be created
 status = 'CREATING'
 while status == 'CREATING':
-    cmd = 'aws managedblockchain list-networks'
-    result = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-    output = result.stdout
-    network_list = ast.literal_eval(output)
+    cmd = '/usr/local/bin/aws managedblockchain list-networks --region us-east-1'
+    result = subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+    network_list = process_command_result(result)
     for network in network_list['Networks']:
         if network['Id'] == results['NetworkId']:
             status = network['Status']
@@ -181,15 +199,22 @@ if status == 'AVAILABLE':
             'member-id': results['MemberId'],
             'node-configuration':
                 "InstanceType={0},"
-                "AvailabilityZone={1}".format(args.node_type, zones.pop())
+                "AvailabilityZone={1}".format(args.node_type, zones.pop()),
+            'region': 'us-east-1'
         }
-        cmd = 'aws managedblockchain create-node'
+        cmd = '/usr/local/bin/aws managedblockchain create-node'
         for k, v in node.items():
             cmd += ' --{0} "{1}"'.format(k, v)
         print(cmd)
         result = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                 universal_newlines=True)
-        output = result.stdout
-        print(output)
+        try:
+            process_command_result(result)
+        except ValueError:
+            if not zones:
+                print("No available instances of type {}".format(args.node_type))
+                exit(1)
+            continue
 else:
     print("Network wasn't created properly. Please delete the network in the AWS console and try again.")
+    exit(1)
