@@ -193,7 +193,8 @@ if status == 'AVAILABLE':
     # create nodes
     zones = ['us-east-1a', 'us-east-1b', 'us-east-1c', 'us-east-1d', 'us-east-1e', 'us-east-1f']
     random.shuffle(zones)
-    for i in range(args.node_count):
+    count = args.node_count
+    while count > 0:
         node = {
             'network-id': results['NetworkId'],
             'member-id': results['MemberId'],
@@ -210,6 +211,7 @@ if status == 'AVAILABLE':
                                 universal_newlines=True)
         try:
             process_command_result(result)
+            count -= 1
         except ValueError:
             if not zones:
                 print("No available instances of type {}".format(args.node_type))
