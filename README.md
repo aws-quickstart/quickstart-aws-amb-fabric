@@ -16,7 +16,8 @@ The following additional improvements are on our backlog:
 <p>
     <img src="doc/images/amb-quickstart-architectural-diagram.png" alt="Sample dapp deployed on Amazon Managed Blockchain"/>
     <br>
-    <em>Example architecture of a dapp deployed on Amazon Managed Blockchain</em>
+    <div style="margin-top: -10px; width: 100%; text-align: center;">
+    <em>Example architecture of a dapp deployed on Amazon Managed Blockchain</em></div>
 </p>
 
 For architectural details and step-by-step instructions, see the deployment guide.

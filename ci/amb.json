@@ -1,0 +1,58 @@
+[
+  {
+    "ParameterKey": "01NetworkName",
+    "ParameterValue": "acme"
+  },
+  {
+    "ParameterKey": "02NetworkDescription",
+    "ParameterValue": "Hyperledger Fabric network for the ACME Consortium"
+  },
+  {
+    "ParameterKey": "03Edition",
+    "ParameterValue": "STARTER"
+  },
+  {
+    "ParameterKey": "04FirstMemberName",
+    "ParameterValue": "ACME1stMember"
+  },
+  {
+    "ParameterKey": "05FirstMemberDescription",
+    "ParameterValue": "The first member of the ACME Consortium"
+  },
+  {
+    "ParameterKey": "06FirstMemberAdminUsername",
+    "ParameterValue": "member1admin"
+  },
+  {
+    "ParameterKey": "07FirstMemberAdminPassword",
+    "ParameterValue": "Password1"
+  },
+  {
+    "ParameterKey": "08ThresholdPercentage",
+    "ParameterValue": 50
+  },
+  {
+    "ParameterKey": "09ThresholdComparator",
+    "ParameterValue": "GREATER_THAN"
+  },
+  {
+    "ParameterKey": "10ProposalDurationInHours",
+    "ParameterValue": 24
+  },
+  {
+    "ParameterKey": "11AvailabilityZoneForPeerNode1",
+    "ParameterValue": "us-east-1a"
+  },
+  {
+    "ParameterKey": "12AvailabilityZoneForPeerNode2",
+    "ParameterValue": "us-east-1b"
+  },
+  {
+    "ParameterKey": "13AvailabilityZoneForPeerNode3",
+    "ParameterValue": "none"
+  },
+  {
+    "ParameterKey": "14InstanceType",
+    "ParameterValue": "bc.t3.small"
+  }
+]
