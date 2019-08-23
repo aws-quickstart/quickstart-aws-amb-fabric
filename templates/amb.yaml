@@ -87,6 +87,7 @@ Parameters:
       - us-east-1e
       - us-east-1f
   13AvailabilityZoneForPeerNode3:
+    Description: A third peer node is only allowed in STANDARD edition.
     Default: us-east-1c
     Type: String
     AllowedValues:
