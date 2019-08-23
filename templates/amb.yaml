@@ -66,38 +66,16 @@ Parameters:
     Type: Number
     Description: "How many hours a proposal will last"
   11AvailabilityZoneForPeerNode1:
+    Description: The availability zone that you want to deploy your first peer node in. As of 22-Aug-2019, only us-east-1a through us-east-1f are currently supported.
     Default: us-east-1a
     Type: String
-    AllowedValues:
-      - us-east-1a
-      - us-east-1b
-      - us-east-1c
-      - us-east-1d
-      - us-east-1e
-      - us-east-1f
   12AvailabilityZoneForPeerNode2:
+    Description: The availability zone for your second peer node. Can be blank.
     Default: us-east-1b
     Type: String
-    AllowedValues:
-      - none - do not create a second node
-      - us-east-1a
-      - us-east-1b
-      - us-east-1c
-      - us-east-1d
-      - us-east-1e
-      - us-east-1f
   13AvailabilityZoneForPeerNode3:
-    Description: A third peer node is only allowed in STANDARD edition.
-    Default: none - do not create a third node
+    Description: The availability zone for your third peer node. Can be blank. A third peer node is only allowed in STANDARD edition.
     Type: String
-    AllowedValues:
-      - none - do not create a third node
-      - us-east-1a
-      - us-east-1b
-      - us-east-1c
-      - us-east-1d
-      - us-east-1e
-      - us-east-1f
   14InstanceType:
     Default: bc.t3.small
     Type: String
@@ -120,9 +98,9 @@ Parameters:
 
 Conditions:
   CreatePeerNode2:
-    !Not [!Equals [!Ref 12AvailabilityZoneForPeerNode2, 'none - do not create a second node']]
+    !Not [!Equals [!Ref 12AvailabilityZoneForPeerNode2, '']]
   CreatePeerNode3:
-    !Not [!Equals [!Ref 13AvailabilityZoneForPeerNode3, 'none - do not create a third node']]
+    !Not [!Equals [!Ref 13AvailabilityZoneForPeerNode3, '']]
   HasNetworkDescription:
     !Not [!Equals [!Ref 02NetworkDescription, '']]
   HasFirstMemberDescription:
