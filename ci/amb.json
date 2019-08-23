@@ -49,7 +49,7 @@
   },
   {
     "ParameterKey": "13AvailabilityZoneForPeerNode3",
-    "ParameterValue": "none"
+    "ParameterValue": ""
   },
   {
     "ParameterKey": "14InstanceType",
