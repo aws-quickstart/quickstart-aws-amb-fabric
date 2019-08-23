@@ -2,7 +2,7 @@
 ---
 ### Amazon Managed Blockchain deployment
 
-This quick start automatically deploys an Amazon Managed Blockchain network in a new or existing virtual private cloud (VPC) in about thirty minutes. Member peers for the first member are also created.
+This quick start automatically deploys an Amazon Managed Blockchain network in about thirty minutes. Member peers for the first member are also created.
 
 This Quick Start is for IT infrastructure architects, administrators, DevOps professionals, Chaincode developers, or business users who are planning to implement a Hyperledger Fabric node deployment on Amazon Managed Blockchain and deploy a decentralized application (dapp) on the AWS Cloud.
 
