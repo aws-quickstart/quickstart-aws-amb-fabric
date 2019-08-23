@@ -6,13 +6,9 @@ This quick start automatically deploys an Amazon Managed Blockchain network in a
 
 This Quick Start is for IT infrastructure architects, administrators, DevOps professionals, Chaincode developers, or business users who are planning to implement a Hyperledger Fabric node deployment on Amazon Managed Blockchain and deploy a decentralized application (dapp) on the AWS Cloud.
 
-The Quick Start automates the following:
-* Deploying an Amazon Managed Blockchain network along with the first blockchain member and highly-available peer nodes.
+The Quick Start automates deploying an Amazon Managed Blockchain network along with the first blockchain member and its highly-available peer nodes. Review [our backlog](https://github.com/aws-quickstart/quickstart-aws-amb-fabric/issues) for planned improvements or known issues.
 
-The following additional improvements are on our backlog:
-* Inviting other AWS accounts to join the network (optional)
-* Deploying an example dapp containing fabric event listeners, chaincode, web APIs and a user interface, which a dapp developer can easily adapt to their needs. (optional)
-
+The infrastructure deployed by this quick start is shown in the following architectural diagram within the Amazon Managed Blockchain VPC. The first member (shown as member A) is also deployed, and subsequent members must be invited to participate, either using the AWS Management Console or the AWS CLI. The rest of the diagram shows how a well-architected decentralized application (dapp) could be deployed in conjunction with this solution.
 <p>
     <img src="doc/images/amb-quickstart-architectural-diagram.png" alt="Sample dapp deployed on Amazon Managed Blockchain"/>
     <br>
