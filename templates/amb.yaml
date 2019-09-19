@@ -1,5 +1,61 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: "Amazon Managed Blockchain Basic Initial Member Template"
+Description: Deploys an EKS cluster with JFrog Artifactory into an existing VPC (qs-1q037efm3).
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: Network configuration
+        Parameters:
+          - 01NetworkName
+          - 02NetworkDescription
+          - 03Edition
+      - Label:
+          default: Member configuration
+        Parameters:
+          - 04FirstMemberName
+          - 05FirstMemberDescription
+          - 06FirstMemberAdminUsername
+          - 07FirstMemberAdminPassword
+      - Label:
+          default: Blockchain configuration
+        Parameters:
+          - 08ThresholdPercentage
+          - 09ThresholdComparator
+          - 10ProposalDurationInHours
+          - 11AvailabilityZoneForPeerNode1
+          - 12AvailabilityZoneForPeerNode2
+          - 13AvailabilityZoneForPeerNode3
+          - 14InstanceType
+    ParameterLabels:
+      01NetworkName:
+        default: Network name
+      02NetworkDescription:
+        default: Network description          
+      03Edition:
+        default: Managed Blockchain edition
+      04FirstMemberName:
+        default: First member name
+      05FirstMemberDescription:
+        default: First member description
+      06FirstMemberAdminUsername:
+        default: First member user name
+      07FirstMemberAdminPassword:
+        default: First member password
+      08ThresholdPercentage:
+        default: Threshold percentage
+      09ThresholdComparator:
+        default: Threshold comparator
+      10ProposalDurationInHours:
+        default: Proposal duration
+      11AvailabilityZoneForPeerNode1:
+        default: Availability Zone 1
+      12AvailabilityZoneForPeerNode2:
+        default: Availability Zone 2
+      13AvailabilityZoneForPeerNode3:
+        default: Availability Zone 3
+      14InstanceType:
+        default: Instance type
 Parameters:
   01NetworkName:
     AllowedPattern: "^[0-9a-zA-Z]+$"
