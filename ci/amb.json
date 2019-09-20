@@ -1,58 +1,58 @@
 [
   {
-    "ParameterKey": "01NetworkName",
+    "ParameterKey": "NetworkName",
     "ParameterValue": "acme"
   },
   {
-    "ParameterKey": "02NetworkDescription",
+    "ParameterKey": "NetworkDescription",
     "ParameterValue": "Hyperledger Fabric network for the ACME Consortium"
   },
   {
-    "ParameterKey": "03Edition",
+    "ParameterKey": "Edition",
     "ParameterValue": "STARTER"
   },
   {
-    "ParameterKey": "04FirstMemberName",
+    "ParameterKey": "FirstMemberName",
     "ParameterValue": "ACME1stMember"
   },
   {
-    "ParameterKey": "05FirstMemberDescription",
+    "ParameterKey": "FirstMemberDescription",
     "ParameterValue": "The first member of the ACME Consortium"
   },
   {
-    "ParameterKey": "06FirstMemberAdminUsername",
+    "ParameterKey": "FirstMemberAdminUsername",
     "ParameterValue": "member1admin"
   },
   {
-    "ParameterKey": "07FirstMemberAdminPassword",
+    "ParameterKey": "FirstMemberAdminPassword",
     "ParameterValue": "Password1"
   },
   {
-    "ParameterKey": "08ThresholdPercentage",
+    "ParameterKey": "ThresholdPercentage",
     "ParameterValue": 50
   },
   {
-    "ParameterKey": "09ThresholdComparator",
+    "ParameterKey": "ThresholdComparator",
     "ParameterValue": "GREATER_THAN"
   },
   {
-    "ParameterKey": "10ProposalDurationInHours",
+    "ParameterKey": "ProposalDurationInHours",
     "ParameterValue": 24
   },
   {
-    "ParameterKey": "11AvailabilityZoneForPeerNode1",
+    "ParameterKey": "PeerNode1AZ",
     "ParameterValue": "us-east-1a"
   },
   {
-    "ParameterKey": "12AvailabilityZoneForPeerNode2",
+    "ParameterKey": "PeerNode2AZ",
     "ParameterValue": "us-east-1b"
   },
   {
-    "ParameterKey": "13AvailabilityZoneForPeerNode3",
+    "ParameterKey": "PeerNode3AZ",
     "ParameterValue": ""
   },
   {
-    "ParameterKey": "14InstanceType",
+    "ParameterKey": "InstanceType",
     "ParameterValue": "bc.t3.small"
   }
 ]
