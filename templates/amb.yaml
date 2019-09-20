@@ -1,35 +1,88 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: "Amazon Managed Blockchain Basic Initial Member Template"
+Description: Amazon Managed Blockchain Basic Initial Member Template
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      -
+        Label:
+          default: Network Configuration
+        Parameters:
+          - NetworkName
+          - NetworkDescription
+          - Edition
+          - ThresholdPercentage
+          - ThresholdComparator
+          - ProposalDurationInHours
+      -
+        Label:
+          default: First Member Configuration
+        Parameters:
+          - FirstMemberName
+          - FirstMemberDescription
+          - FirstMemberAdminUsername
+          - FirstMemberAdminPassword
+          - PeerNode1AZ
+          - PeerNode2AZ
+          - PeerNode3AZ
+          - InstanceType
+    ParameterLabels:
+      NetworkName:
+        default: Network name
+      NetworkDescription:
+        default: Network description
+      ThresholdPercentage:
+        default: Threshold percentage
+      ThresholdComparator:
+        default: Threshold comparator
+      ProposalDurationInHours:
+        default: Proposal duration
+      FirstMemberName:
+        default: First member name
+      FirstMemberDescription:
+        default: First member description
+      FirstMemberAdminUsername:
+        default: First member admin username
+      FirstMemberAdminPassword:
+        default: First member admin password
+      PeerNode1AZ:
+        default: Peer node 1 AZ
+      PeerNode2AZ:
+        default: Peer node 2 AZ
+      PeerNode3AZ:
+        default: Peer node 3 AZ
+      InstanceType:
+        default: Instance type
 Parameters:
-  01NetworkName:
+  NetworkName:
+    Description: The name of your Amazon Managed Blockchain network
     AllowedPattern: "^[0-9a-zA-Z]+$"
-    ConstraintDescription: "NetworkName must be alphanumeric."
-    Description: "The name of your Amazon Managed Blockchain network"
+    ConstraintDescription: Network name must be alphanumeric and cannot contain spaces.
     Type: String
-  02NetworkDescription:
+  NetworkDescription:
+    Description: An optional description of your network
     Type: String
-    Description: "An optional description of your network"
-  03Edition:
+  Edition:
     ConstraintDescription: Must be STARTER or STANDARD
     Default: STARTER
     AllowedValues:
       - STARTER
       - STANDARD
     Type: String
-  04FirstMemberName:
+  FirstMemberName:
+    Description: The name of the first member in your Amazon Managed Blockchain network
     AllowedPattern: "^[0-9a-zA-Z]+$"
-    ConstraintDescription: "FirstMemberName must be alphanumeric."
-    Description: "The name of the first member in your Amazon Managed Blockchain network"
+    ConstraintDescription: FirstMemberName must be alphanumeric.
     Type: String
-  05FirstMemberDescription:
+  FirstMemberDescription:
+    Description: An optional description of your first member
     Type: String
-    Description: "An optional description of your first member"
-  06FirstMemberAdminUsername:
+  FirstMemberAdminUsername:
+    Description: The username of your first member's admin user
     AllowedPattern: '^[0-9a-zA-Z/]+$'
     ConstraintDescription: AdminUsername must contain only uppercase and lowercase letters and numbers.
-    Description: The administrator username for the first member in your blockchain network.
     Type: String
-  07FirstMemberAdminPassword:
+  FirstMemberAdminPassword:
+    Description: The password of your first member's admin user
     MinLength: 8
     MaxLength: 32
     AllowedPattern: "^(?!.*?['\"\\/ @])(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).*{8,32}$"
@@ -37,46 +90,46 @@ Parameters:
       AdminPassword must be at least 8 characters long and must contain at least one
       uppercase character, one lowercase character, and one digit. It must not
       contain ', ", \, /, @ or spaces. It must not exceed 32 characters in length.
-    Description: The password for the administrator of the first member in your blockchain network.
     Type: String
     NoEcho: true
-  08ThresholdPercentage:
+  ThresholdPercentage:
+    Description: The percentage of favorable votes needed to approve a blockchain proposal
     MinValue: 1
     MaxValue: 100
     Type: Number
     Default: 50
-    Description: The percentage of favorable votes needed to approve a blockchain proposal
-  09ThresholdComparator:
+  ThresholdComparator:
+    Description: >-
+          This comparator is used to determine how the vote percentages are compared
+          with the threshold. If it is GREATER_THAN, then the percentage of favorable
+          votes must exceed the ThresholdPercentage for a proposal to pass. If it is
+          GREATER_THAN_OR_EQUAL_TO, then the percentage of favorable votes must at
+          least be equal to the threshold for a proposal to pass.
     ConstraintDescription: Must be GREATER_THAN or GREATER_THAN_OR_EQUAL_TO
     Default: GREATER_THAN
     AllowedValues:
       - GREATER_THAN
       - GREATER_THAN_OR_EQUAL_TO
     Type: String
-    Description: >-
-      This comparator is used to determine how the vote percentages are compared
-      with the threshold. If it is GREATER_THAN, then the percentage of favorable
-      votes must exceed the ThresholdPercentage for a proposal to pass. If it is
-      GREATER_THAN_OR_EQUAL_TO, then the percentage of favorable votes must at
-      least be equal to the threshold for a proposal to pass.
-  10ProposalDurationInHours:
+  ProposalDurationInHours:
+    Description: The number of hours a proposal will can be voted on
     MinValue: 1
     MaxValue: 168
     Default: 24
     Type: Number
-    Description: "How many hours a proposal will last"
-  11AvailabilityZoneForPeerNode1:
-    Description: The availability zone that you want to deploy your first peer node in. As of 22-Aug-2019, only us-east-1a through us-east-1f are currently supported.
+  PeerNode1AZ:
+    Description: The availability zone for your first peer node
     Default: us-east-1a
     Type: String
-  12AvailabilityZoneForPeerNode2:
+  PeerNode2AZ:
     Description: The availability zone for your second peer node. Can be blank.
     Default: us-east-1b
     Type: String
-  13AvailabilityZoneForPeerNode3:
-    Description: The availability zone for your third peer node. Can be blank. A third peer node is only allowed in STANDARD edition.
+  PeerNode3AZ:
+    Description: The availability zone for your third peer node. Can be blank.
     Type: String
-  14InstanceType:
+  InstanceType:
+    Description: The type of compute instance to use for your peer nodes
     Default: bc.t3.small
     Type: String
     AllowedValues:
@@ -92,67 +145,67 @@ Parameters:
       - bc.c5.xlarge
       - bc.c5.2xlarge
       - bc.c5.4xlarge
-    Description: >-
-      If 03Edition is STARTER, then this value must be bc.t3.small
+    ConstraintDescription: >-
+      If Edition is STARTER, then this value must be bc.t3.small
       or bc.t3.medium.
 
 Conditions:
   CreatePeerNode2:
-    !Not [!Equals [!Ref 12AvailabilityZoneForPeerNode2, '']]
+    !Not [!Equals [!Ref PeerNode2AZ, '']]
   CreatePeerNode3:
-    !Not [!Equals [!Ref 13AvailabilityZoneForPeerNode3, '']]
+    !Not [!Equals [!Ref PeerNode3AZ, '']]
   HasNetworkDescription:
-    !Not [!Equals [!Ref 02NetworkDescription, '']]
+    !Not [!Equals [!Ref NetworkDescription, '']]
   HasFirstMemberDescription:
-    !Not [!Equals [!Ref 05FirstMemberDescription, '']]
+    !Not [!Equals [!Ref FirstMemberDescription, '']]
 
 Resources:
   Member:
     Type: AWS::ManagedBlockchain::Member
     Properties:
       NetworkConfiguration:
-        Name: !Ref 01NetworkName
-        Description: !If [HasNetworkDescription, !Ref 02NetworkDescription, !Ref "AWS::NoValue"]
+        Name: !Ref NetworkName
+        Description: !If [HasNetworkDescription, !Ref NetworkDescription, !Ref "AWS::NoValue"]
         Framework: HYPERLEDGER_FABRIC
         FrameworkVersion: "1.2"
         NetworkFrameworkConfiguration:
           NetworkFabricConfiguration:
-            Edition: !Ref 03Edition
+            Edition: !Ref Edition
         VotingPolicy:
           ApprovalThresholdPolicy:
-            ThresholdPercentage: !Ref 08ThresholdPercentage
-            ProposalDurationInHours: !Ref 10ProposalDurationInHours
-            ThresholdComparator: !Ref 09ThresholdComparator
+            ThresholdPercentage: !Ref ThresholdPercentage
+            ProposalDurationInHours: !Ref ProposalDurationInHours
+            ThresholdComparator: !Ref ThresholdComparator
       MemberConfiguration:
-        Name: !Ref 04FirstMemberName
-        Description: !If [HasFirstMemberDescription, !Ref 05FirstMemberDescription, !Ref "AWS::NoValue"]
+        Name: !Ref FirstMemberName
+        Description: !If [HasFirstMemberDescription, !Ref FirstMemberDescription, !Ref "AWS::NoValue"]
         MemberFrameworkConfiguration:
           MemberFabricConfiguration:
-            AdminUsername: !Ref 06FirstMemberAdminUsername
-            AdminPassword: !Ref 07FirstMemberAdminPassword
+            AdminUsername: !Ref FirstMemberAdminUsername
+            AdminPassword: !Ref FirstMemberAdminPassword
   PeerNode1:
     Type: AWS::ManagedBlockchain::Node
     Properties:
       MemberId: !GetAtt Member.MemberId
       NetworkId: !GetAtt Member.NetworkId
-      NodeConfiguration: 
-        AvailabilityZone: !Ref 11AvailabilityZoneForPeerNode1
-        InstanceType: !Ref 14InstanceType
+      NodeConfiguration:
+        AvailabilityZone: !Ref PeerNode1AZ
+        InstanceType: !Ref InstanceType
   PeerNode2:
     Type: AWS::ManagedBlockchain::Node
     Condition: CreatePeerNode2
     Properties:
       MemberId: !GetAtt Member.MemberId
       NetworkId: !GetAtt Member.NetworkId
-      NodeConfiguration: 
-        AvailabilityZone: !Ref 12AvailabilityZoneForPeerNode2
-        InstanceType: !Ref 14InstanceType
+      NodeConfiguration:
+        AvailabilityZone: !Ref PeerNode2AZ
+        InstanceType: !Ref InstanceType
   PeerNode3:
     Type: AWS::ManagedBlockchain::Node
     Condition: CreatePeerNode3
     Properties:
       MemberId: !GetAtt Member.MemberId
       NetworkId: !GetAtt Member.NetworkId
-      NodeConfiguration: 
-        AvailabilityZone: !Ref 13AvailabilityZoneForPeerNode3
-        InstanceType: !Ref 14InstanceType
+      NodeConfiguration:
+        AvailabilityZone: !Ref PeerNode3AZ
+        InstanceType: !Ref InstanceType
