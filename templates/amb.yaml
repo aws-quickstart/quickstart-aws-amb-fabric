@@ -5,7 +5,7 @@ Metadata:
     ParameterGroups:
       -
         Label:
-          default: Network Configuration
+          default: Network configuration
         Parameters:
           - NetworkName
           - NetworkDescription
@@ -15,7 +15,7 @@ Metadata:
           - ProposalDurationInHours
       -
         Label:
-          default: First Member Configuration
+          default: First member configuration
         Parameters:
           - FirstMemberName
           - FirstMemberDescription
@@ -45,23 +45,24 @@ Metadata:
       FirstMemberAdminPassword:
         default: First member admin password
       PeerNode1AZ:
-        default: Peer node 1 AZ
+        default: Peer node 1 Availability Zone
       PeerNode2AZ:
-        default: Peer node 2 AZ
+        default: Peer node 2 Availability Zone
       PeerNode3AZ:
-        default: Peer node 3 AZ
+        default: Peer node 3 Availability Zone
       InstanceType:
         default: Instance type
 Parameters:
   NetworkName:
-    Description: The name of your Amazon Managed Blockchain network
+    Description: The name of your Amazon Managed Blockchain network.
     AllowedPattern: "^[0-9a-zA-Z]+$"
     ConstraintDescription: Network name must be alphanumeric and cannot contain spaces.
     Type: String
   NetworkDescription:
-    Description: An optional description of your network
+    Description: An optional description of your network.
     Type: String
   Edition:
+    Description: Setting that determines the number of peer nodes per member and the selection of instance types that can be used for them.
     ConstraintDescription: Must be STARTER or STANDARD
     Default: STARTER
     AllowedValues:
@@ -69,20 +70,20 @@ Parameters:
       - STANDARD
     Type: String
   FirstMemberName:
-    Description: The name of the first member in your Amazon Managed Blockchain network
+    Description: The name of the first member in your Amazon Managed Blockchain network.
     AllowedPattern: "^[0-9a-zA-Z]+$"
     ConstraintDescription: FirstMemberName must be alphanumeric.
     Type: String
   FirstMemberDescription:
-    Description: An optional description of your first member
+    Description: An optional description of your first member.
     Type: String
   FirstMemberAdminUsername:
-    Description: The username of your first member's admin user
+    Description: The user name of your first member's admin user.
     AllowedPattern: '^[0-9a-zA-Z/]+$'
     ConstraintDescription: AdminUsername must contain only uppercase and lowercase letters and numbers.
     Type: String
   FirstMemberAdminPassword:
-    Description: The password of your first member's admin user
+    Description: The password of your first member's admin user.
     MinLength: 8
     MaxLength: 32
     AllowedPattern: "^(?!.*?['\"\\/ @])(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).*{8,32}$"
@@ -93,7 +94,7 @@ Parameters:
     Type: String
     NoEcho: true
   ThresholdPercentage:
-    Description: The percentage of favorable votes needed to approve a blockchain proposal
+    Description: The percentage of favorable votes needed to approve a blockchain proposal.
     MinValue: 1
     MaxValue: 100
     Type: Number
@@ -112,24 +113,24 @@ Parameters:
       - GREATER_THAN_OR_EQUAL_TO
     Type: String
   ProposalDurationInHours:
-    Description: The number of hours a proposal will can be voted on
+    Description: The number of hours a proposal can be voted on.
     MinValue: 1
     MaxValue: 168
     Default: 24
     Type: Number
   PeerNode1AZ:
-    Description: The availability zone for your first peer node
+    Description: The Availability Zone for your first peer node.
     Default: us-east-1a
     Type: String
   PeerNode2AZ:
-    Description: The availability zone for your second peer node. Can be blank.
+    Description: The Availability Zone for your second peer node. Can be blank.
     Default: us-east-1b
     Type: String
   PeerNode3AZ:
-    Description: The availability zone for your third peer node. Can be blank.
+    Description: The Availability Zone for your third peer node. Can be blank.
     Type: String
   InstanceType:
-    Description: The type of compute instance to use for your peer nodes
+    Description: The type of compute instance to use for your peer nodes.
     Default: bc.t3.small
     Type: String
     AllowedValues:
