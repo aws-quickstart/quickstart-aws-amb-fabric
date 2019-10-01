@@ -1,6 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: Amazon Managed Blockchain Basic Initial Member Template
+Description: Amazon Managed Blockchain Basic Initial Member Template (qs-1q1tsb2rh)
 Metadata:
+  LICENSE: Apache License Version 2.0
   AWS::CloudFormation::Interface:
     ParameterGroups:
       -
