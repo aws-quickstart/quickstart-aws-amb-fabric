@@ -6,13 +6,6 @@ This quick start automatically deploys an Amazon Managed Blockchain network in a
 
 The Quick Start automates deploying an Amazon Managed Blockchain network along with the first blockchain member and its highly-available peer nodes. Review [our backlog](https://github.com/aws-quickstart/quickstart-aws-amb-fabric/issues) for planned improvements or known issues.
 
-The infrastructure deployed by this quick start is shown in the following architectural diagram in the portion highlighted in yellow. The first member (shown as member A) is deployed, and subsequent members must be invited to participate, either using the AWS Management Console or the AWS CLI.
-<p>
-    <img src="doc/images/amb-quickstart-architectural-diagram.png" alt="An example deployment of Amazon Managed Blockchain on AWS"/>
-    <br>
-    <div style="margin-top: -10px; width: 100%; text-align: center;">
-    <em>An example deployment of Amazon Managed Blockchain on AWS</em></div>
-</p>
 
 For architectural details and step-by-step instructions, see the deployment guide.
 
