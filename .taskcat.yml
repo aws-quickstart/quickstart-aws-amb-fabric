@@ -1,0 +1,38 @@
+project:
+  name: quickstart-aws-amb-fabric
+  owner: quickstart@amazon.com
+  package_lambda: false
+  regions:
+  - ap-northeast-1
+  - ap-northeast-2
+  - ap-south-1
+  - ap-southeast-1
+  - ap-southeast-2
+  - ca-central-1
+  - eu-central-1
+  - eu-west-1
+  - eu-west-2
+  - us-east-1
+  - us-east-2
+  - us-west-1
+  - us-west-2
+tests:
+  amb:
+    parameters:
+      Edition: STARTER
+      FirstMemberAdminPassword: Password1
+      FirstMemberAdminUsername: member1admin
+      FirstMemberDescription: The first member of the ACME Consortium
+      FirstMemberName: ACME1stMember
+      InstanceType: bc.t3.small
+      NetworkDescription: Hyperledger Fabric network for the ACME Consortium
+      NetworkName: acme
+      PeerNode1AZ: us-east-1a
+      PeerNode2AZ: us-east-1b
+      PeerNode3AZ: ''
+      ProposalDurationInHours: 24
+      ThresholdComparator: GREATER_THAN
+      ThresholdPercentage: 50
+    regions:
+    - us-east-1
+    template: templates/amb.template.yaml
