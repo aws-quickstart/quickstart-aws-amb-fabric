@@ -1,11 +1,10 @@
-git staAWSTemplateFormatVersion: 2010-09-09
+AWSTemplateFormatVersion: 2010-09-09
 Description: Amazon Managed Blockchain Basic Initial Member Template (qs-1q1tsb2rh)
 Metadata:
   LICENSE: Apache License Version 2.0
   AWS::CloudFormation::Interface:
     ParameterGroups:
-      -
-        Label:
+      - Label:
           default: Network configuration
         Parameters:
           - NetworkName
@@ -14,8 +13,7 @@ Metadata:
           - ThresholdPercentage
           - ThresholdComparator
           - ProposalDurationInHours
-      -
-        Label:
+      - Label:
           default: First member configuration
         Parameters:
           - FirstMemberName
@@ -82,7 +80,7 @@ Parameters:
     Type: String
   FirstMemberAdminUsername:
     Description: The user name of your first member's admin user.
-    AllowedPattern: '^[0-9a-zA-Z/]+$'
+    AllowedPattern: "^[0-9a-zA-Z/]+$"
     ConstraintDescription: AdminUsername must contain only uppercase and lowercase letters and numbers.
     Type: String
   FirstMemberAdminPassword:
@@ -104,11 +102,11 @@ Parameters:
     Default: 50
   ThresholdComparator:
     Description: >-
-          This comparator is used to determine how the vote percentages are compared
-          with the threshold. If it is GREATER_THAN, then the percentage of favorable
-          votes must exceed the ThresholdPercentage for a proposal to pass. If it is
-          GREATER_THAN_OR_EQUAL_TO, then the percentage of favorable votes must at
-          least be equal to the threshold for a proposal to pass.
+      This comparator is used to determine how the vote percentages are compared
+      with the threshold. If it is GREATER_THAN, then the percentage of favorable
+      votes must exceed the ThresholdPercentage for a proposal to pass. If it is
+      GREATER_THAN_OR_EQUAL_TO, then the percentage of favorable votes must at
+      least be equal to the threshold for a proposal to pass.
     ConstraintDescription: Must be GREATER_THAN or GREATER_THAN_OR_EQUAL_TO
     Default: GREATER_THAN
     AllowedValues:
@@ -154,14 +152,10 @@ Parameters:
       or bc.t3.medium.
 
 Conditions:
-  CreatePeerNode2:
-    !Not [!Equals [!Ref PeerNode2AZ, '']]
-  CreatePeerNode3:
-    !Not [!Equals [!Ref PeerNode3AZ, '']]
-  HasNetworkDescription:
-    !Not [!Equals [!Ref NetworkDescription, '']]
-  HasFirstMemberDescription:
-    !Not [!Equals [!Ref FirstMemberDescription, '']]
+  CreatePeerNode2: !Not [!Equals [!Ref PeerNode2AZ, ""]]
+  CreatePeerNode3: !Not [!Equals [!Ref PeerNode3AZ, ""]]
+  HasNetworkDescription: !Not [!Equals [!Ref NetworkDescription, ""]]
+  HasFirstMemberDescription: !Not [!Equals [!Ref FirstMemberDescription, ""]]
 
 Resources:
   Member:
@@ -169,7 +163,12 @@ Resources:
     Properties:
       NetworkConfiguration:
         Name: !Ref NetworkName
-        Description: !If [HasNetworkDescription, !Ref NetworkDescription, !Ref "AWS::NoValue"]
+        Description:
+          !If [
+            HasNetworkDescription,
+            !Ref NetworkDescription,
+            !Ref "AWS::NoValue",
+          ]
         Framework: HYPERLEDGER_FABRIC
         FrameworkVersion: "1.2"
         NetworkFrameworkConfiguration:
@@ -182,7 +181,12 @@ Resources:
             ThresholdComparator: !Ref ThresholdComparator
       MemberConfiguration:
         Name: !Ref FirstMemberName
-        Description: !If [HasFirstMemberDescription, !Ref FirstMemberDescription, !Ref "AWS::NoValue"]
+        Description:
+          !If [
+            HasFirstMemberDescription,
+            !Ref FirstMemberDescription,
+            !Ref "AWS::NoValue",
+          ]
         MemberFrameworkConfiguration:
           MemberFabricConfiguration:
             AdminUsername: !Ref FirstMemberAdminUsername
