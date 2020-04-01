@@ -31,6 +31,8 @@ Metadata:
         default: Network name
       NetworkDescription:
         default: Network description
+      Edition:
+        default: Edition
       ThresholdPercentage:
         default: Threshold percentage
       ThresholdComparator:
