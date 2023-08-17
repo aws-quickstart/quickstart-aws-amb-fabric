@@ -1,0 +1,6 @@
+This guide covers the information you need to deploy the {partner-product-name} Partner Solution in the AWS Cloud.
+
+// Fill in the info in <angle brackets> for use on the landing page only: 
+Blockchain technology makes it possible to build applications where multiple parties can execute transactions without the need for a trusted, central authority. Managed Blockchain is a fully managed service for creating and managing scalable blockchain networks using the popular open source Hyperledger Fabric framework. Hyperledger Fabric is well suited for applications that require stringent privacy and permission controls with a known set of members, such as a financial application where certain trade-related data is shared only with select banks.
+
+Blockchain technology can be beneficial for several other use cases, including supply chain management, asset transfer and tokenization, customer loyalty programs, and digital identity.

@@ -1,0 +1,12 @@
+:xrefstyle: short
+
+Deploying this Partner Solution with default parameters builds the following {partner-product-short-name} environment in the
+AWS Cloud.
+
+// Replace this example diagram with your own. Follow our wiki guidelines: https://w.amazon.com/bin/view/AWS_Quick_Starts/Process_for_PSAs/#HPrepareyourarchitecturediagram. Upload your source PowerPoint file to the GitHub {deployment name}/docs/images/ directory in its repository.
+
+[#architecture1]
+.Partner Solution architecture for {partner-product-short-name} on AWS. The initial release of the Managed Blockchain deploys the area shown in yellow.
+image::../docs/deployment_guide/images/image2.png[Architecture]
+
+The Partner Solution sets up a highly available Managed Blockchain architecture with a single initial member, Member A, that spans two Availability Zones (in the diagram, the areas that are shaded yellow). Members B and C are included in the diagram to emphasize that a typical blockchain consists of several members, although this Partner Solution creates only the first one. The other members must be invited using either the AWS Management Console or AWS Command Line Interface (AWS CLI).

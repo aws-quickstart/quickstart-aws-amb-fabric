@@ -1,0 +1,5 @@
+// Include any postdeployment steps here, such as steps necessary to test that the deployment was successful. If there are no postdeployment steps, leave this file empty.
+
+== Postdeployment steps
+
+You can now begin the process of building a decentralized application on top of the infrastructure that you have deployed. To get started, see https://aws.amazon.com/blogs/database/build-and-deploy-an-application-for-hyperledger-fabric-on-amazon-managed-blockchain/[Build and deploy an application] https://aws.amazon.com/blogs/database/build-and-deploy-an-application-for-hyperledger-fabric-on-amazon-managed-blockchain/[for Hyperledger Fabric on Amazon Managed Blockchain] on the AWS Database Blog for a step-by-step example.
